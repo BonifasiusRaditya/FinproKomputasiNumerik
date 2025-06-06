@@ -1,3 +1,18 @@
+/*
+    * Program ini menggunakan metode Bisection untuk mencari akar dari fungsi kecepatan aliran air
+    * berdasarkan rumus Bernoulli. Program ini juga membuktikan rumus tersebut dan melakukan validasi hasil.
+    * 
+    * Penulis: Bonifasius Raditya Pandu Hendrianto
+    * Tanggal: 7 Juni 2025
+    * 
+    * Deskripsi:
+    * - Bagian 1: Mencari akar dari fungsi kecepatan aliran air menggunakan metode Bisection.
+    * - Bagian 2: Membuktikan rumus Bernoulli dengan menghitung kecepatan aliran air.
+    * - Bagian 3: Validasi hasil dari metode Bisection dengan perhitungan kecepatan aliran air.
+    *
+    * ver 2.0
+*/
+
 #include <stdio.h>
 #include <math.h> 
 
@@ -28,8 +43,10 @@ void bisection_method(double xl, double xu, double es, double v_target, double L
         xr_lama = xr;
         xr = (xl + xu) / 2.0;
         
+        // Perhitungan galat relatif
         if (xr != 0) ea = fabs((xr - xr_lama) / xr) * 100.0;
 
+        // Menghitung nilai fungsi pada xr
         double f_xr = calculate_velocity(EARTH_GRAVITY, xr, L, t) - v_target;
         
         // Menampilkan 0.00 untuk galat pada iterasi pertama agar lebih rapi
@@ -54,12 +71,12 @@ int main() {
 
     // Parameter untuk pencarian akar
     double v_target = 4, xl_init = 0.0, xu_init = 2.0, es_target = 1.0;
-    int max_iterations = 50;    
+    int max_iterations = 50; // Jumlah iterasi maksimum di set menjadi 50 kali 
 
     printf("+---------+------------+------------+------------+--------------+-----------+\n");
     printf("| Iterasi |     xl     |     xu     |     xr     |    f(xr)     |  ea (%%)   |\n");
     printf("+---------+------------+------------+------------+--------------+-----------+\n");
-    bisection_method(xl_init, xu_init, es_target, v_target, L_const, t_const, max_iterations, &h_init);
+    bisection_method(xl_init, xu_init, es_target, v_target, L_const, t_const, max_iterations, &h_init); // Memanggil fungsi bisection_method untuk mencari akar
     printf("+---------+------------+------------+------------+--------------+-----------+\n");
 
 
@@ -69,23 +86,27 @@ int main() {
     printf("                   Perhitungan Rumus Bernouli                \n");
     printf("=============================================================\n");
     printf("Parameter yang digunakan:\n");
-    printf(" - Gaya Gravitasi (g) = %.2f m/s^2\n", EARTH_GRAVITY);
-    printf(" - Panjang Saluran (L) = %.2f m\n", L_const);
-    printf(" - Waktu (t) = %.2f s\n", t_const);
-    printf(" - Tinggi Air Awal = %f m\n", h_init);
+    printf(" - Gaya Gravitasi (g) = %.2f m/s^2\n", EARTH_GRAVITY); // Gaya gravitasi bumi
+    printf(" - Panjang Saluran (L) = %.2f m\n", L_const); // Panjang saluran air
+    printf(" - Waktu (t) = %.2f s\n", t_const); // Waktu aliran air
+    printf(" - Tinggi Air Awal = %f m\n", h_init); // Tinggi air awal yang ditemukan dari metode Bisection
     printf("=============================================================\n");
     printf("v = sqrt(2 * g * H) * tanh(sqrt(2 * g * H) / (2 * L) * t)\n");
     printf("v = sqrt(2 * %.2f * %.4f) * tanh(sqrt(2 * %.2f * %.4f) / (2 * %.2f) * %.2f)\n", EARTH_GRAVITY, h_init, EARTH_GRAVITY, h_init, L_const, t_const);
-    printf("v = %f m/s\n", calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const));
+    printf("v = %f m/s\n", calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const)); // Menghitung kecepatan aliran air berdasarkan rumus Bernoulli
     
 
     // Bagian 3: Validasi Hasil
     printf("\n\n--- Bagian 3: Validasi Hasil ---\n");
     printf("Bisection Method: h = %f m/s\n", h_init);
-    printf("Hasil Kecepatan Aliran Air: \n");
-    printf("v = %f m/s\n", calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const));
-    printf("v_target = %.4f m/s\n", v_target);
 
+    // Menghitung galat relatif antara hasil kecepatan aliran air menggunakan h dari bisection dengan target kecepatan
+    printf("Hasil Kecepatan Aliran Air: \n");
+    printf("v = %f m/s\n", calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const)); // Kecepatan aliran air yang dihitung
+    printf("v_target = %.4f m/s\n", v_target); // Target kecepatan aliran air
+
+    // Hasil dari galat relatif antara hasil perhitungan kecepatan dengan target kecepatan
     printf("Error: %.4f %%\n", fabs((calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const))-v_target)/v_target*100);
+    
     return 0; 
 }
