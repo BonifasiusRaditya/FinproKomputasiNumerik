@@ -8,15 +8,16 @@
 \usepackage{xcolor}
 \usepackage{url} % Added for better URL formatting
 \usepackage{caption} % Added for subfigures if needed and figure notes
-% \usepackage{amsmath}
 \usepackage{algpseudocode}
-
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18} % Gunakan versi terbaru yang Anda miliki
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{\textbf{Analisis Penentuan Ketinggian Awal Air dalam Tangki Silinder Menggunakan Metode Numerik}}
+%\title{\textbf{Analisis Penentuan Ketinggian Awal Air dalam Tangki Silinder Menggunakan Metode Numerik}}
+\title{\textbf{Pembuktian \textit{Bisection Method} dalam Perhitungan Ketinggian Awal Air pada Tangki (\textit{Bernoulli})}}
 
 \author{
 \IEEEauthorblockN{Bonifasius Raditya Pandu Hendrianto}
@@ -61,50 +62,32 @@ Namun, Hukum Torricelli merupakan model ideal. Dalam sistem nyata yang melibatka
 v = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right)
 \label{eq:kecepatan_air}
 \end{equation}
+Untuk mencari nilai ketinggian awal air ($H$) yang diperlukan untuk mencapai kecepatan aliran tertentu ($v$), kita perlu menyelesaikan persamaan berikut:
+\begin{equation}
+    f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - v
+    \label{eq:bernoulli_inverse}
+\end{equation}
 dimana:
 \begin{itemize}
+    \item $H$ adalah ketinggian air (m) 
     \item $g$ adalah percepatan gravitasi ($9.81 \text{ m/s}^2$) 
-    \item $H$ adalah ketinggian awal air dalam tangki (m) 
+    \item $v$ adalah kecepatan aliran air (m/s) 
     \item $L$ adalah panjang pipa (m) 
     \item $t$ adalah waktu yang telah berlalu (s) 
 \end{itemize}
+Fungsi tangen hiperbolik ($\tanh$) dalam persamaan ini merepresentasikan bagaimana kecepatan aliran air ($v$) mempengaruhi ketinggian air ($H$) secara bertahap. Metode numerik diperlukan untuk menyelesaikan persamaan ini karena sifat non-linear dari fungsi $\tanh$ yang membuat solusi analitik sulit dicapai. Oleh karena itu, metode pencarian akar seperti \textit{bisection method} akan digunakan untuk menemukan nilai $H$ yang memenuhi persamaan tersebut. \\
 
-Fungsi tangen hiperbolik ($\tanh$) dalam persamaan ini bertugas untuk merepresentasikan bagaimana kecepatan secara bertahap meningkat dari nol menuju kondisi tunaknya, dengan mempertimbangkan panjang pipa $L$ dan waktu $t$. Karena variabel ketinggian $H$ muncul di dalam dan di luar fungsi transendental ini, persamaan tersebut tidak dapat diselesaikan secara aljabar untuk mencari nilai $H$. Oleh karena itu, diperlukan pendekatan numerik untuk menemukan akarnya. Metode seperti \textit{bisecton method} (\textit{bisection}) dan posisi palsu (\textit{false position}) adalah teknik iteratif yang dapat digunakan untuk menghitung nilai $H$ dengan tingkat akurasi yang diinginkan, sesuai dengan parameter yang diberikan dalam masalah.
+\textit{Bisection method} merupakan metode numerik yang digunakan untuk menemukan akar dari suatu fungsi dengan cara membagi interval yang mengandung akar menjadi dua bagian dan memilih bagian yang mengandung akar. Metode ini sangat efektif untuk fungsi kontinu dan dapat menjamin konvergensi ke akar yang diinginkan jika interval awal dipilih dengan benar. Metode ini dimulai dengan memilih dua tebakan awal, $x_l$ (batas bawah) dan $x_u$ (batas atas), yang harus mengurung akar. Kemudian, titik tengah dari interval tersebut dihitung sebagai estimasi awal akar. Proses ini diulang dengan memperbarui interval berdasarkan tanda dari fungsi pada titik tengah hingga galat relatif perkiraan ($\epsilon_a$) mencapai kriteria penghentian yang ditentukan.
 
 \section{DATA PENGUJIAN}
 Terdapat beberapa variabel yang digunakan dalam perhitungan numerik \textit{bisection method ini}. Parameter waktu (t), panjang saluran (L), dan percepatan gravitasi akan berperan sebagai variabel kontrol karena nilainya sudah ditetapkan diawal. Parameter yang dijaga konstan selama simulasi adalah:
 \begin{itemize}
+    \item Kecepatan Aliran Air ($v$) sebesar $4.00 \, \text{m/s}$.
     \item Percepatan gravitasi ($g$) sebesar $9.81 \, \text{m/s}^2$.
     \item Panjang saluran ($L$) sepanjang $5.00 \, \text{m}$.
     \item Waktu yang telah berlalu ($t$) selama $3.00 \, \text{s}$.
 \end{itemize}
-
-Parameter tinggi air ($H_0$) akan berperan sebagai variabel bebas dimana nilai ini akan divariasikan untuk mendapatkan hasil beragam sehingga nilai error akan semakin valid. Perhitungan numerik dimulai dengan nilai $H = 1.00 \, \text{m}$ dan ditingkatkan secara bertahap dengan skala interval $2.00 \, \text{m}$ untuk setiap uji coba berikutnya. Total uji coba perhitungan numerik adalah 10x sehingga tingg air ($H_0$) maksimal adalah $H = 19.00 \, \text{m}$. 
-
-Hasil dari perhitungan numerik ini adalah kecepatan aliran air (v) sebagai variabel terikat. Rumus yang digunakan mengandung unsur prinsip bernoulli. Seluruh data hasil keluaran dari program simulasi ini dirangkum secara lengkap pada Tabel \ref{tab:data_simulasi}.
-
-\begin{table}[htbp]
-\centering
-\caption{Data Uji Coba Kecepatan Aliran}
-\label{tab:data_uji_rapi}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|c|r|r|r|}
-\hline
-\textbf{Uji Coba} & \multicolumn{1}{c|}{\textbf{H (m)}} & \multicolumn{1}{c|}{\textbf{L (m)}} & \multicolumn{1}{c|}{\textbf{t (s)}} \\
-\hline
-1  & 5.00 & 5.00 & 3.00  \\
-2  & 3.00 & 5.00 & 3.00  \\
-3  & 5.00 & 5.00 & 3.00  \\
-4  & 7.00 & 5.00 & 3.00  \\
-5  & 9.00 & 5.00 & 3.00  \\
-6  & 11.00 & 5.00 & 3.00 \\
-7  & 13.00 & 5.00 & 3.00 \\
-8  & 15.00 & 5.00 & 3.00 \\
-9  & 17.00 & 5.00 & 3.00 \\
-10 & 19.00 & 5.00 & 3.00 \\
-\hline
-\end{tabular}
-\end{table}
+Hasil dari perhitungan numerik ini adalah perbandingan perhitungan numerik \textit{bisection method} dengan rumus prinsip bernoulli untuk mencari nilai H (m) sebagai variabel terikat. Rumus yang digunakan mengandung unsur prinsip bernoulli. 
 
 \section{METODE PENYELESAIAN}
 
@@ -141,33 +124,19 @@ Berikut merupakan pseudocode untuk pengimplementasian \textit{bisection method}:
 \end{algorithmic}
 \end{flushleft}
 
-\clearpage
-\section{ANALISA HASIL EKSPERIMEN}
-Berikut merupakan hasil kecepatan aliran air yang diperoleh dari prinsip bernoulli dengan ketinggian variatif interval 2m.
-\begin{table}[htbp]
-\centering
-\caption{Hasil Simulasi Kecepatan Aliran Air}
-\label{tab:simulasi_aliran_air}
-\renewcommand{\arraystretch}{1.2} % Memberi sedikit ruang ekstra antar baris
-\begin{tabular}{|c|r|r|r|r|}
-\hline
-\textbf{Uji Coba} & \textbf{H (m)} & \textbf{L (m)} & \textbf{t (s)} & \textbf{Kecepatan (m/s)} \\
-\hline
-1  & 1.00  & 5.00 & 3.00 & 3.849030  \\
-2  & 3.00  & 5.00 & 3.00 & 7.519812  \\
-3  & 5.00  & 5.00 & 3.00 & 9.852684  \\
-4  & 7.00  & 5.00 & 3.00 & 11.698524 \\
-5  & 9.00  & 5.00 & 3.00 & 13.279184 \\
-6  & 11.00 & 5.00 & 3.00 & 14.686449 \\
-7  & 13.00 & 5.00 & 3.00 & 15.968396 \\
-8  & 15.00 & 5.00 & 3.00 & 17.154012 \\
-9  & 17.00 & 5.00 & 3.00 & 18.262441 \\
-10 & 19.00 & 5.00 & 3.00 & 19.307152 \\
-\hline
-\end{tabular}
-\end{table}
+Setelah itu, dilakukan perhitungan untuk mencari nilai galat relatif $v_\text{numerik}$ perhitungan bernoulli menggunakan hasil dari \textit{bisection method} dari $v_\text{target}$ kita dapat menggunakan rumus:
+\begin{equation}
+\epsilon_r = \left| \frac{v_{\text{target}} - v_{\text{numerik}}}{v_{\text{target}}} \right| \times 100\%
+\end{equation}
 
-Setelah mendapatkan data kecepatan aliran air dari berbagai ketinggian awal, langkah selanjutnya adalah mencari akar dari fungsi yang menghubungkan ketinggian awal ($H$) dengan kecepatan aliran ($v$) dengan menggunakan metode numerik \textit{bisection method}. Tabel \ref{tab:hasil_bisection} di bawah ini menunjukkan hasil iterasi dari metode bisection untuk mencari nilai ketinggian awal yang diperlukan untuk mencapai kecepatan aliran $v = 4 \, \text{m/s}$:
+
+\section{ANALISA HASIL EKSPERIMEN}
+Hasil perhitungan numerik \textit{bisection method} akan dibandingkan dengan perhitungan nilai fungsi f(H) sehingga perbandingan tersebut akan menjadi tolak ukur dari keakuratan \textit{bisection method}. Dengan menggunakan \textit{bisection method}, kita akan mencari nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ dengan parameter sebagai berikut:
+\begin{itemize}
+    \item Fungsi target: $f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - 4 = 0$
+    \item Interval awal: $[x_l, x_u] = [0, 2]$
+    \item Kriteria berhenti: $\epsilon_s = 1\%$
+\end{itemize}
 \begin{table}[htbp]
 \centering
 \caption{Hasil Iterasi \textit{bisection method} untuk Mencari H}
@@ -188,38 +157,56 @@ Setelah mendapatkan data kecepatan aliran air dari berbagai ketinggian awal, lan
 \hline
 \end{tabular}
 \end{table}
+Nilai pada tabel ini didapat dari perhitungan iteratif menggunakan \textit{bisection method} dengan memasukan nilai kecepatan aliran yang diinginkan ($v = 4 \, \text{m/s}$) untuk mendapatkan nilai $H_0$ yang sesuai.
 
-Nilai pada kolom ini didapatkan dengan memasukkan setiap nilai \textbf{$H_0$} (estimasi akar pada iterasi tertentu) ke dalam fungsi $f(H)$ yang ingin dicari akarnya. Iterasi ke-1 adalah nilai tengah dari interval 0 dan 2, yakni 1.0 sebagai nilai bagi dua.
+Berikut merupakan perhitungan setiap iterasi yang ada menggunakan \textit{bisection method} untuk mencari nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ dengan parameter awal sebagai berikut:
+\begin{itemize}
+    \item Fungsi target: $f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - 4 = 0$
+    \item Interval awal: $[x_l, x_u] = [0, 2]$
+    \item Kriteria berhenti: $\epsilon_s = 1\%$
+\end{itemize}
+Iterasi ke-1 adalah nilai tengah dari interval 0 dan 2, yakni 1.0 sebagai nilai bagi dua.
+
 Perhitungan untuk Iterasi ke-2:
 \begin{enumerate}
     \item Identifikasi nilai $x_r$ yang relevan:
     \begin{itemize}
-        \item $x_{r, \text{baru}}$ (dari iterasi ke-2) = \textbf{1.500000}
-        \item $x_{r, \text{lama}}$ (dari iterasi ke-1) = \textbf{1.000000}
+        \item $x_{r, \text{baru}}$ (dari iterasi ke-2) = \textbf{1.5}
+        \item $x_{r, \text{lama}}$ (dari iterasi ke-1) = \textbf{1.0}
     \end{itemize}
     
     \item Masukkan ke dalam rumus:
-    $\epsilon_a = \left| \frac{1.500000 - 1.000000}{1.500000} \right| \times 100\%$
+    \begin{equation}
+    \epsilon_a = \left| \frac{1.5 - 1.0}{1.5} \right| \times 100\%
+    \end{equation}
     
     \item Selesaikan kalkulasi:
-    $\epsilon_a = \left| \frac{0.5}{1.5} \right| \times 100\% = 0.3333... \times 100\% = \textbf{33.33\%}$
+    \begin{equation}
+    \epsilon_a = \left| \frac{0.5}{1.5} \right| \times 100\% = 0.3333 \times 100\% = \textbf{33.33\%}
+    \end{equation}
 \end{enumerate}
+
 Perhitungan untuk Iterasi ke-3:
 \begin{enumerate}
     \item Identifikasi nilai $x_r$ yang relevan:
     \begin{itemize}
-        \item $x_{r, \text{baru}}$ (dari iterasi ke-3) = \textbf{1.250000}
-        \item $x_{r, \text{lama}}$ (dari iterasi ke-2) = \textbf{1.500000}
+        \item $x_{r, \text{baru}}$ (dari iterasi ke-3) = \textbf{1.25}
+        \item $x_{r, \text{lama}}$ (dari iterasi ke-2) = \textbf{1.50}
     \end{itemize}
     
     \item Masukkan ke dalam rumus:
-    $\epsilon_a = \left| \frac{1.250000 - 1.500000}{1.250000} \right| \times 100\%$
+    \begin{equation}
+    \epsilon_a = \left| \frac{1.25 - 1.5}{1.250000} \right| \times 100\%
+    \end{equation}
     
     \item Selesaikan kalkulasi:
-    $\epsilon_a = \left| \frac{-0.25}{1.25} \right| \times 100\% = 0.2 \times 100\% = \textbf{20.00\%}$
+    \begin{equation}
+    \epsilon_a = \left| \frac{-0.25}{1.25} \right| \times 100\% = 0.2 \times 100\% = \textbf{20.00\%}
+    \end{equation}
 \end{enumerate}
 
-Perhitungan selesai sampai nilai galat relatif mencapai nilai yang lebih kecil dari kriteria penghentian yang ditentukan (pada kasus ini, nilai $\epsilon_s = 1\%$). Pada kasus ini, iterasi terakhir adalah 8\\
+Perhitungan selesai sampai nilai galat relatif mencapai nilai yang lebih kecil dari kriteria penghentian yang ditentukan (pada kasus ini, nilai $\epsilon_s = 1\%$). Pada kasus ini, iterasi terakhir adalah 8.
+
 Perhitungan untuk Iterasi ke-8:
 \begin{enumerate}
     \item Identifikasi nilai $x_r$ yang relevan:
@@ -229,45 +216,97 @@ Perhitungan untuk Iterasi ke-8:
     \end{itemize}
     
     \item Masukkan ke dalam rumus:
-    $\epsilon_a = \left| \frac{1.054688 - 1.046875}{1.054688} \right| \times 100\%$
+    \begin{equation}
+    \epsilon_a = \left| \frac{1.054688 - 1.046875}{1.054688} \right| \times 100\%
+    \end{equation}
     
     \item Selesaikan kalkulasi:
-    $\epsilon_a = \left| \frac{0.007813}{1.054688} \right| \times 100\% = 0.00741... \times 100\% = \textbf{0.74\%}$
+    \begin{equation}
+    \epsilon_a = \left| \frac{0.007813}{1.054688} \right| \times 100\% = 0.00741 \times 100\% = \textbf{0.74\%}
+    \end{equation}
 \end{enumerate}
+Perhitungan dihentikan pada \textbf{iterasi ke-8} karena nilai galat relatif perkiraan ($\epsilon_a = 0.74\%$) telah lebih kecil dari kriteria penghentian yang ditentukan, yakni $1\%$. Dengan demikian, nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ adalah sekitar \textbf{1.054688 meter}. \\
 
-Perhitungan dihentikan pada \textbf{iterasi ke-8} karena nilai galat relatif perkiraan ($\epsilon_a = 0.74\%$) telah lebih kecil dari kriteria penghentian yang ditentukan, yakni $1\%$. Dengan demikian, nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ adalah sekitar \textbf{1.054688 meter}.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[
+        title={\textbf{Grafik Pencarian Akar $f(H)=0$}},
+        xlabel={Ketinggian Awal, $H$ (m)},
+        ylabel={Nilai Fungsi, $f(H)$},
+        xmin=0, xmax=2,          % Batas sumbu x sesuai interval bisection
+        ymin=-4.5, ymax=2.5,      % Batas sumbu y
+        grid=major,              % Menambahkan grid
+        legend pos=south east,   % Posisi legenda
+        axis lines=middle,       % Sumbu x dan y bertemu di (0,0)
+        ]
+        
+        % 1. Plot fungsi f(H)
+        % f(H) = sqrt(19.62*H) * tanh(3 * sqrt(19.62*H) / 10) - 4
+        \addplot[
+            domain=0.01:2,   % Domain H dari 0.01 (hindari H=0) hingga 2
+            samples=100,     % Jumlah titik sampel untuk kehalusan kurva
+            color=blue,
+            thick
+        ] {sqrt(19.62*x) * tanh(3 * sqrt(19.62*x) / 10) - 4};
+        \addlegendentry{$f(H) = \sqrt{2gH}\tanh(\frac{\sqrt{2gH}}{2L}t) - 4$}
+
+        % 2. Tandai titik akar yang ditemukan oleh metode bisection
+        % Nilai H = 1.054688 dari tabel iterasi Anda
+        \addplot[
+            mark=*,
+            color=red,
+            mark size=2.5pt
+        ] coordinates {(1.054688, 0)};
+        \addlegendentry{Akar ditemukan ($H \approx 1.055$)}
+        
+        % 3. Tambahkan anotasi/label untuk titik akar
+        \node[pin={[pin edge={red, thick}]135:{\small$H \approx 1.054688$}}] at (axis cs:1.054688, 0) {};
+
+    \end{axis}
+\end{tikzpicture}
+\caption{Visualisasi pencarian akar dari fungsi $f(H)$ pada interval $[0, 2]$}
+\label{fig:grafik_bisection}
+\end{figure}
+
+Perhitungan dengan rumus bernoulli dilakukan untuk memvalidasi hasil perhitungan numerik \textit{bisection method} dengan rumus:
+\begin{equation}
+v = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right)
+\end{equation}
+Dengan memasukkan nilai-nilai yang telah ditetapkan:
+\begin{equation}
+v = \sqrt{2 \cdot 9.81 \cdot 1.054688} \tanh\left(\frac{\sqrt{2 \cdot 9.81 \cdot 1.054688}}{2 \cdot 5} \cdot 3\right)
+\end{equation}
+\begin{equation}
+v = \sqrt{20.68} \tanh\left(\frac{\sqrt{20.68}}{10} \cdot 3\right)
+\end{equation}
+\begin{equation}
+v \approx 3.9916 \, \text{m/s}
+\end{equation}
+
+Untuk menghitung galat relatif antara kecepatan target dan kecepatan yang dihasilkan dari perhitungan bernoulli, kita dapat menggunakan rumus:
+\begin{equation}
+\epsilon_r = \left| \frac{4 - 3.9916}{4} \right| \times 100\%
+\end{equation}
+\begin{equation}
+\epsilon_r = \left| \frac{0.0084}{4} \right| \times 100\% \approx 0.21\%
+\end{equation}
+
+Hasil perhitungan dari \textit{bisection method} menunjukkan bahwa nilai ketinggian awal air ($H$) adalah \textbf{1.054688 meter} untuk mendapat nilai kecepatan aliran air sebesar $4.00 \, \text{m/s}$ dengan galat relatif sebesar \textbf{0.74\%} untuk nilai ketinggiannya. Dengan ketinggian yang sama, hasil perhitungan bernoulli menunjukkan bahwa kecepatan aliran air yang dihasilkan adalah sekitar $3.9916 \, \text{m/s}$ galat relatif antara kecepatan target ($4 \, \text{m/s}$) dan kecepatan yang dihasilkan ($3.9916 \, \text{m/s}$) adalah sekitar $0.21\%$. \\
 
 \section{KESIMPULAN}
-
-Penelitian ini bertujuan untuk menentukan ketinggian awal air ($H$) dalam sebuah tangki silinder yang diperlukan untuk menghasilkan kecepatan aliran keluar sebesar $4 \, \text{m/s}$ melalui pipa panjang. Karena sifat transendental dari persamaan aliran yang digunakan, solusi analitik tidak dapat dicapai, sehingga metode numerik pencarian akar, khususnya \textit{bisecton method} (\textit{bisection method}), diterapkan untuk menyelesaikan masalah ini. Berdasarkan hasil perhitungan iteratif dengan kriteria penghentian galat relatif di bawah $1\%$, ditemukan bahwa nilai ketinggian awal yang dibutuhkan adalah sekitar \textbf{1.054688 meter}. Hasil ini diperoleh setelah 8 kali iterasi, di mana galat relatif perkiraan ($\epsilon_a$) telah mencapai $0.74\%$. Studi kasus ini berhasil menunjukkan bahwa \textit{bisecton method} merupakan pendekatan yang andal dan konvergen untuk menyelesaikan permasalahan rekayasa non-linear yang kompleks, serta memberikan hasil yang akurat untuk perancangan sistem fluida.
+Dengan menggunakan \textit{bisection method}, hasil dari ketinggian awal air ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ adalah sekitar 1.054688 meter dengan galat relatif sebesar $0.74\%$. Perbandingan dengan hasil perhitungan bernoulli menunjukkan bahwa kecepatan aliran yang dihasilkan adalah sekitar $3.9916 \, \text{m/s}$ dengan galat relatif antar kecepatan perhitungan bernoulli dengan kecepatan target sebesar $0.21\%$ yang menunjukan persenan error sangat kecil hingga dibawah 1\%. Hal ini menunjukkan bahwa \textit{bisection method} adalah metode yang efektif untuk mencari akar dari fungsi non-linear dalam konteks aliran fluida. \\
 
 \section{LINK GITHUB}
-Berikut adalah link GitHub dari kelompok kami (jika ada implementasi kode):
-\url{https://github.com/BonifasiusRaditya/TugasPemogramanB} % Placeholder
+Berikut adalah link GitHub:
+\url{https://github.com/BonifasiusRaditya/FinproKomputasiNumerik.git} \\
 
 \begin{thebibliography}{00}
 \bibitem{ref1} F. M. White, \textit{Fluid Mechanics}, 8th ed. New York: McGraw-Hill Education, 2016.
 \bibitem{ref2} S. C. Chapra and R. P. Canale, \textit{Numerical Methods for Engineers}, 7th ed. New York: McGraw-Hill Education, 2015.
-\bibitem{ref3} F. M. White, \textit{Fluid Mechanics}, 8th ed. New York: McGraw-Hill Education, 2016.
+\bibitem{ref3} J. D. Anderson, \textit{Computational Fluid Dynamics: The Basics with Applications}, 2nd ed. New York: McGraw-Hill Education, 1995.
+\bibitem{ref4} E. Kreyszig, \textit{Advanced Engineering Mathematics}, 10th ed. New York: Wiley, 2011.
 \end{thebibliography}
-% Referensi lain yang relevan dapat ditambahkan di sini,
-% misalnya buku teks mengenai metode numerik atau mekanika fluida.
 \vspace{12pt}
-% \color{red}
-% IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
-
-\section{ANALISA HASIL EKSPERIMEN}
-
-Analisis ini berfokus pada penyelesaian numerik untuk menemukan nilai ketinggian awal ($H$) yang akan menghasilkan kecepatan aliran target $v=4 \, \text{m/s}$. Metode yang digunakan adalah \textit{bisection method} dengan parameter awal sebagai berikut:
-\begin{itemize}
-    \item Fungsi target: $f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - 4 = 0$
-    \item Interval awal: $[x_l, x_u] = [0, 2]$
-    \item Kriteria berhenti: $\epsilon_s = 1\%$
-\end{itemize}
-
-Proses pencarian akar dilakukan secara iteratif. Setiap iterasi menghasilkan estimasi akar baru ($x_r$) dan galat relatif perkiraan ($\epsilon_a$) yang dibandingkan dengan kriteria berhenti. Seluruh langkah perhitungan iteratif hingga solusi ditemukan dirangkum pada Tabel \ref{tab:hasil_bisection}.
-
-\subsection*{Kesimpulan Hasil}
-Perhitungan dihentikan pada \textbf{iterasi ke-8} karena nilai galat relatif perkiraan ($\epsilon_a = 0.74\%$) telah lebih kecil dari kriteria penghentian yang ditentukan ($\epsilon_s = 1\%$). Dengan demikian, nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ adalah sekitar \textbf{1.054688 meter}.
 
 \end{document}

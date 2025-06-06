@@ -9,7 +9,7 @@ double calculate_velocity(double g, double H, double L, double t) {
     return sqrt(2.0 * g * H) * tanh(tanh_argument);
 }
 
-void bisection_method(double xl, double xu, double es, double v_target, double L, double t, int max_iter) {
+void bisection_method(double xl, double xu, double es, double v_target, double L, double t, int max_iter, double * h_init) {
     double xr = xl; // Inisialisasi awal untuk perhitungan galat
     double xr_lama;
     double ea = 100.0; // Inisialisasi galat dengan nilai besar
@@ -33,7 +33,7 @@ void bisection_method(double xl, double xu, double es, double v_target, double L
         double f_xr = calculate_velocity(EARTH_GRAVITY, xr, L, t) - v_target;
         
         // Menampilkan 0.00 untuk galat pada iterasi pertama agar lebih rapi
-        printf("| %-7d | %10.6f | %10.6f | %10.6f | %12.6f | %9.2f |\n", i + 1, xl, xu, xr, f_xr, (i == 0) ? 0.0 : ea);
+        printf("| %-7d | %10.4f | %10.4f | %10f | %12.4f | %9.4f |\n", i + 1, xl, xu, xr, f_xr, (i == 0) ? 0.0 : ea);
 
         // Cek kondisi berhenti (setelah iterasi pertama)
         if (ea < es && i > 0 || i > max_iter) break;
@@ -42,58 +42,50 @@ void bisection_method(double xl, double xu, double es, double v_target, double L
         double f_xl = calculate_velocity(EARTH_GRAVITY, xl, L, t) - v_target;
         if (f_xl * f_xr < 0) xu = xr;
         else xl = xr;
-    }   
+    }
+    *h_init = xr;
 }
 
-
 int main() {
-    // Bagian 1: Simulasi untuk berbagai nilai H
-    double L_const = 5.0, t_const = 3.0, H, v, H_initial_double, interval_double; 
-    int num_tests, H_initial_int, interval_int;
+    double L_const = 5.0, t_const = 3.0, h_init; 
 
-    printf("Masukkan Jumlah Data, Interval Data, H Awal (contoh: 10 2 1): ");
-    scanf("%d %d %d", &num_tests, &interval_int, &H_initial_int);
+    // Bagian 1: Pencarian Akar dengan Bisection Method
+    printf("\n\n--- Bagian 1: Pencarian Akar dengan Bisection Method ---\n");
 
-    H_initial_double = H_initial_int;
-    interval_double = interval_int;
-    
-    
-    printf("--- Bagian 1: Simulasi Kecepatan ---\n");
-    printf("\n=============================================================\n");
-    printf("           PROGRAM SIMULASI KECEPATAN ALIRAN AIR\n");
+    // Parameter untuk pencarian akar
+    double v_target = 4, xl_init = 0.0, xu_init = 2.0, es_target = 1.0;
+    int max_iterations = 50;    
+
+    printf("+---------+------------+------------+------------+--------------+-----------+\n");
+    printf("| Iterasi |     xl     |     xu     |     xr     |    f(xr)     |  ea (%%)   |\n");
+    printf("+---------+------------+------------+------------+--------------+-----------+\n");
+    bisection_method(xl_init, xu_init, es_target, v_target, L_const, t_const, max_iterations, &h_init);
+    printf("+---------+------------+------------+------------+--------------+-----------+\n");
+
+
+    // Bagian 2: Pembuktian Rumus Bernoulli
+    printf("\n\n--- Bagian 2: Pembuktian Rumus Bernoulli ---\n");
+    printf("=============================================================\n");
+    printf("                   Perhitungan Rumus Bernouli                \n");
     printf("=============================================================\n");
     printf("Parameter yang digunakan:\n");
     printf(" - Gaya Gravitasi (g) = %.2f m/s^2\n", EARTH_GRAVITY);
     printf(" - Panjang Saluran (L) = %.2f m\n", L_const);
     printf(" - Waktu (t) = %.2f s\n", t_const);
-    printf(" - Tinggi Air Awal (H0) dimulai dari %.2f m dengan interval %.2f m\n", H_initial_double, interval_double);
-    printf("=============================================================\n\n");
+    printf(" - Tinggi Air Awal = %f m\n", h_init);
+    printf("=============================================================\n");
+    printf("v = sqrt(2 * g * H) * tanh(sqrt(2 * g * H) / (2 * L) * t)\n");
+    printf("v = sqrt(2 * %.2f * %.4f) * tanh(sqrt(2 * %.2f * %.4f) / (2 * %.2f) * %.2f)\n", EARTH_GRAVITY, h_init, EARTH_GRAVITY, h_init, L_const, t_const);
+    printf("v = %f m/s\n", calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const));
+    
 
-    printf("+------------+-----------+-----------+-----------+-------------------+\n");
-    printf("| Uji Coba   |  H (m)    |  L (m)    |  t (s)    |  Kecepatan (m/s)  |\n");
-    printf("+------------+-----------+-----------+-----------+-------------------+\n");
-    for (int i = 0; i < num_tests; i++) {
-        H = H_initial_double + (i * interval_double);
-        v = calculate_velocity(EARTH_GRAVITY, H, L_const, t_const);
-        printf("| %-10d | %9.2f | %9.2f | %9.2f | %17.6f |\n", i + 1, H, L_const, t_const, v);
-    }
-    printf("+------------+-----------+-----------+-----------+-------------------+\n");
-    
-// ===============================================================================================
+    // Bagian 3: Validasi Hasil
+    printf("\n\n--- Bagian 3: Validasi Hasil ---\n");
+    printf("Bisection Method: h = %f m/s\n", h_init);
+    printf("Hasil Kecepatan Aliran Air: \n");
+    printf("v = %f m/s\n", calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const));
+    printf("v_target = %.4f m/s\n", v_target);
 
-    // Bagian 2: Pencarian Akar dengan Bisection Method
-    printf("\n\n--- Bagian 2: Pencarian Akar dengan Bisection Method ---\n");
-    
-    // Parameter untuk pencarian akar
-    double v_target = 4.0, xl_init = 0.0, xu_init = 2.0, es_target = 1.0;
-    int max_iterations = 50;
-    
-    printf("+---------+------------+------------+------------+--------------+-----------+\n");
-    printf("| Iterasi |     xl     |     xu     |     xr     |    f(xr)     |  ea (%%)   |\n");
-    printf("+---------+------------+------------+------------+--------------+-----------+\n");
-    bisection_method(xl_init, xu_init, es_target, v_target, L_const, t_const, max_iterations);
-    printf("+---------+------------+------------+------------+--------------+-----------+\n");
-    
-    printf("\nSemua %d uji coba simulasi telah selesai.\n", num_tests);
+    printf("Error: %.4f %%\n", fabs((calculate_velocity(EARTH_GRAVITY, h_init, L_const, t_const))-v_target)/v_target*100);
     return 0; 
 }
