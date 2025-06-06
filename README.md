@@ -25,7 +25,7 @@ Program ini menggunakan metode **Bisection** untuk mencari akar dari fungsi kece
 
 2. **Proses Bisection:**  
    Fungsi yang dicari akarnya:  
-   $$ f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L} t\right) - v_{target} $$
+   f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L} t\right) - v_{target}
 
 3. **Output:**  
    - Tabel iterasi bisection method
