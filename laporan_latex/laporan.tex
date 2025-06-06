@@ -21,7 +21,7 @@
 
 \author{
 \IEEEauthorblockN{Bonifasius Raditya Pandu Hendrianto}
-\IEEEauthorblockA{\textit{Teknik Komputer} \\
+\IEEEauthorblockA{\textit{Teknik Komputer (2306242350)} \\
 \textit{Universitas Indonesia}\\
 Depok, Indonesia \\
 radityahendrianto@gmail.com}
@@ -44,7 +44,7 @@ Dalam disiplin ilmu mekanika fluida, analisis aliran dari tangki penyimpanan mel
 
 Tujuan utama dari penelitian ini adalah untuk mendemonstrasikan penerapan \textit{bisecton method} secara sistematis dalam menemukan solusi numerik untuk permasalahan aliran fluida yang diberikan. Untuk memfokuskan analisis, studi ini menggunakan serangkaian parameter yang telah ditetapkan: kecepatan target air adalah $v = 4 \, \text{m/s}$, panjang pipa $L = 5 \, \text{m}$, dan waktu $t = 3 \, \text{s}$. Implementasi \textit{bisecton method} akan dilakukan dengan menggunakan interval awal tebakan $[0, 2]$ meter dan kriteria penghentian berupa galat relatif perkiraan ($\epsilon_a$) yang lebih kecil dari $1\%$.
 
-\section{DASAR TEORI}
+\section{STUDI LITERATUR}
 Dinamika fluida adalah cabang dari mekanika fluida yang mempelajari bagaimana fluida (cairan dan gas) bergerak serta gaya yang bekerja padanya. Studi ini sangat penting dalam berbagai aplikasi rekayasa, mulai dari desain pesawat hingga sistem perpipaan. Prinsip fundamental yang mendasari dinamika fluida adalah hukum kekekalan massa, momentum, dan energi. Dari prinsip-prinsip ini, diturunkan persamaan-persamaan yang menggambarkan hubungan antara properti fluida seperti tekanan, kecepatan, dan ketinggian. Salah satu persamaan paling terkenal dalam dinamika fluida adalah Persamaan Bernoulli, yang menghubungkan energi kinetik, energi potensial, dan energi aliran fluida di sepanjang garis aliran. Persamaan ini menjadi dasar untuk memahami fenomena seperti gaya angkat pada sayap pesawat dan aliran air dalam pipa.
 
 Salah satu aplikasi langsung dari Prinsip Bernoulli adalah Hukum Torricelli. Hukum ini, yang dirumuskan oleh Evangelista Torricelli, secara spesifik menjelaskan kecepatan aliran keluar (efluks) suatu fluida dari sebuah lubang kecil pada sebuah wadah atau tangki. Dalam kondisi ideal, di mana lubang dianggap kecil dibandingkan luas penampang tangki dan viskositas diabaikan, hukum ini menyatakan bahwa kecepatan aliran keluar, $v$, sama dengan kecepatan yang akan diperoleh sebuah benda jika jatuh bebas dari ketinggian $h$, yaitu ketinggian permukaan fluida di atas lubang. Secara matematis, hukum ini dinyatakan sebagai $v = \sqrt{2gh}$, dengan $g$ adalah percepatan gravitasi. Hukum ini memberikan fondasi teoretis yang kuat untuk menganalisis sistem aliran sederhana, seperti yang digambarkan pada studi kasus ini.
@@ -91,15 +91,17 @@ Hasil dari perhitungan numerik ini adalah perbandingan perhitungan numerik \text
 
 \section{METODE PENYELESAIAN}
 
-Metode yang dipakai untuk menyelesaikan permasalahan ini adalah \textbf{\textit{bisecton method} (bisection method)}. Metode ini merupakan metode pencarian akar yang didasarkan pada teorema nilai antara. Prosesnya dimulai dengan menentukan dua tebakan awal, $x_l$ (batas bawah) dan $x_u$ (batas atas), yang harus mengurung akar, yang berarti perkalian nilai fungsi pada kedua titik tersebut harus negatif ($f(x_l)f(x_u) < 0$). Estimasi akar berikutnya, $H_0$, dihitung sebagai titik tengah interval:
+Metode yang dipakai untuk menyelesaikan permasalahan ini adalah \textbf{\textit{bisecton method} (bisection method)}. Metode ini merupakan metode pencarian akar yang didasarkan pada teorema nilai antara. Prosesnya dimulai dengan menentukan dua tebakan awal, $x_l$ (batas bawah) dan $x_u$ (batas atas), yang harus mengurung akar, yang berarti perkalian nilai fungsi pada kedua titik tersebut harus negatif ($f(x_l)f(x_u) < 0$). Estimasi akar berikutnya, $x_r$, dihitung sebagai titik tengah interval:
 \begin{equation}
-    H_0 = \frac{x_l + x_u}{2}
+    x_r = \frac{x_l + x_u}{2}
 \end{equation}
 Interval kemudian diperbarui untuk iterasi selanjutnya. Galat relatif perkiraan ($\epsilon_a$) dihitung untuk mengukur perubahan antara estimasi akar yang baru dan yang sebelumnya, menggunakan rumus:
 \begin{equation}
     \epsilon_a = \left|\frac{x_{r}^{\text{baru}} - x_{r}^{\text{lama}}}{x_{r}^{\text{baru}}}\right| \times 100\%
 \end{equation} 
 Iterasi akan berhenti ketika nilai $\epsilon_a$ lebih kecil atau sama dengan kriteria penghentian yang ditentukan ($\epsilon_s$).
+
+Nilai dari $x_l$ dan $x_u$ awal ditentukan dari tebakan awal yang masuk akal. Nilai setelahny a akan dihitung berdasarkan fungsi $f(H)$ yang telah didefinisikan sebelumnya. Jika $f(x_l)$ dan $f(x_r)$ memiliki tanda yang berbeda atau negatif, maka akar terletak di antara $x_l$ dan $x_r$, sehingga kita akan memperbarui batas atas ($x_u$) menjadi $x_r$. Sebaliknya, jika tanda dari $f(x_l)$ dan $f(x_r)$ sama atau positif, maka akar terletak di antara $x_r$ dan $x_u$, sehingga kita akan memperbarui batas bawah ($x_l$) menjadi $x_r$. Proses ini diulang hingga galat relatif perkiraan mencapai kriteria penghentian yang telah ditentukan. Pada kasus ini, $\epsilon_s = 1\%$. 
 
 Berikut merupakan pseudocode untuk pengimplementasian \textit{bisection method}:
 \begin{flushleft}
@@ -130,7 +132,7 @@ Setelah itu, dilakukan perhitungan untuk mencari nilai galat relatif $v_\text{nu
 \end{equation}
 
 
-\section{ANALISA HASIL EKSPERIMEN}
+\section{DISKUSI DAN ANALISA HASIL EKSPERIMEN}
 Hasil perhitungan numerik \textit{bisection method} akan dibandingkan dengan perhitungan nilai fungsi f(H) sehingga perbandingan tersebut akan menjadi tolak ukur dari keakuratan \textit{bisection method}. Dengan menggunakan \textit{bisection method}, kita akan mencari nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ dengan parameter sebagai berikut:
 \begin{itemize}
     \item Fungsi target: $f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - 4 = 0$
@@ -300,6 +302,10 @@ Dengan menggunakan \textit{bisection method}, hasil dari ketinggian awal air ($H
 \section{LINK GITHUB}
 Berikut adalah link GitHub:
 \url{https://github.com/BonifasiusRaditya/FinproKomputasiNumerik.git} \\
+
+\section{LINK YOUTUBE}
+Berikut adalah link YouTube:
+\url{https://youtu.be/AHNSWor2pdk} \\
 
 \begin{thebibliography}{00}
 \bibitem{ref1} F. M. White, \textit{Fluid Mechanics}, 8th ed. New York: McGraw-Hill Education, 2016.

@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1749236030.98533 "c:/Users/bonifasius/OneDrive/Documents/kuliah/finpro_komnum/laporan_latex/laporan.tex" "laporan.pdf" "laporan" 1749236032.0293 0
+["pdflatex"] 1749239446.81453 "c:/Users/bonifasius/OneDrive/Documents/kuliah/finpro_komnum/laporan_latex/laporan.tex" "laporan.pdf" "laporan" 1749239447.87143 0
   "C:/Users/bonifasius/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1749217438 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/bonifasius/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1749217423 13161744 9eee3fb3feaa1cb3703d768fbe6f1887 ""
   "C:/Users/bonifasius/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -202,9 +202,9 @@
   "C:/Users/bonifasius/AppData/Local/Programs/MiKTeX/tex/latex/tools/tabularx.sty" 1730400552 7243 e5dac1240636811edb77568b81818372 ""
   "C:/Users/bonifasius/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/bonifasius/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/bonifasius/OneDrive/Documents/kuliah/finpro_komnum/laporan_latex/laporan.tex" 1749236030 20151 d668a0d8e5a2848fde3b359a5a559573 ""
-  "laporan.aux" 1749236031 1732 8a177bf116eb69a5da5edac3f8bdeb28 "pdflatex"
-  "laporan.tex" 1749236030 20151 d668a0d8e5a2848fde3b359a5a559573 ""
+  "c:/Users/bonifasius/OneDrive/Documents/kuliah/finpro_komnum/laporan_latex/laporan.tex" 1749239446 20952 0867c1b0e0ab4d6adff00785bc616493 ""
+  "laporan.aux" 1749239447 1851 b22df629315fa3d566b3f9c8cd73f1a8 "pdflatex"
+  "laporan.tex" 1749239446 20952 0867c1b0e0ab4d6adff00785bc616493 ""
   "src/5.15.png" 1749185721 8009 1be3303cf1f0e9833db9fb2520b18f92 ""
   (generated)
   "laporan.aux"
