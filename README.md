@@ -4,7 +4,7 @@
 
 Repositori ini berisi:
 - **Laporan ilmiah** dalam format LaTeX (`laporan_latex/laporan.tex`) yang membahas penerapan metode Gauss-Legendre untuk menghitung integral tentu $\int_{-3}^{3} \frac{1}{1+x^2} dx$ secara numerik.
-- **Program C (`main.c`)** yang mengimplementasikan metode Gauss-Legendre dengan titik dan bobot yang dihitung secara dinamis untuk berbagai jumlah titik (n = 2 hingga 6).
+- **Program C (`main.c`)** yang mengimplementasikan metode Gauss-Legendre dengan titik dan bobot yang dihitung secara dinamis (iterasi 2-6).
 
 ---
 
