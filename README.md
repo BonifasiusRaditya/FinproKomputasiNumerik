@@ -1,6 +1,6 @@
-# Metode Gauss-Legendre untuk Integral Tentu Numerik
+# Metode Gauss-Legendre untuk Penyelesaian Integral Tentu Secara Numerik
 
-Nama: Bonifasius Raditya Pandu Hendrianto
+Nama: Bonifasius Raditya Pandu Hendrianto  
 NPM: 2306242350
 
 ## Deskripsi Singkat
