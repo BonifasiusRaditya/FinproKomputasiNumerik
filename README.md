@@ -19,5 +19,5 @@ Program C pada repositori ini:
 - Menghitung galat relatif tiap nilai n nya untuk memastikan validasi data
 - Menampilkan hasil aproksimasi integral dan galat relatif sejati dalam format tabel.
 
-**Contoh Output Program:**
+**Contoh Output Program:**  
 ![picture 1](https://i.imgur.com/0qypuNt.png)  
