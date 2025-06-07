@@ -1,4 +1,7 @@
-# Laporan dan Implementasi Program: Metode Gauss-Legendre untuk Integral Tentu
+Metode Gauss-Legendre untuk Integral Tentu Numerik
+
+Nama: Bonifasius Raditya Pandu Hendrianto
+NPM: 2306242350
 
 ## Deskripsi Singkat
 
