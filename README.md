@@ -1,36 +1,32 @@
-# Pembuktian Bisection Method dalam Perhitungan Ketinggian Awal Air pada Tangki
+# Laporan dan Implementasi Program: Metode Gauss-Legendre untuk Integral Tentu
 
-**Nama:** Bonifasius Raditya Pandu Hendrianto  
-**NPM:** 23062423450
+## Deskripsi Singkat
 
-## Deskripsi
+Repositori ini berisi:
+- **Laporan ilmiah** dalam format LaTeX (`laporan_latex/laporan.tex`) yang membahas penerapan metode Gauss-Legendre untuk menghitung integral tentu $\int_{-3}^{3} \frac{1}{1+x^2} dx$ secara numerik.
+- **Program C (`main.c`)** yang mengimplementasikan metode Gauss-Legendre dengan titik dan bobot yang dihitung secara dinamis untuk berbagai jumlah titik (n = 2 hingga 6).
 
-Program ini menggunakan metode **Bisection** untuk mencari akar dari fungsi kecepatan aliran air berdasarkan rumus Bernoulli. Program membuktikan rumus tersebut dan melakukan validasi hasil. Output utama dari program adalah nilai ketinggian air awal pada tangki ($H_0$) agar kecepatan aliran air ($v$) mencapai target $v_{target} = 4$ m/s.
+---
 
-## Fitur Program
+## Isi Laporan
 
-- Menghitung akar fungsi kecepatan aliran air dengan metode Bisection.
-- Membuktikan hasil dengan rumus Bernoulli.
-- Validasi hasil numerik dengan perhitungan analitik.
-- Menampilkan tabel iterasi bisection dan galat relatif.
+Laporan membahas:
+- **Pendahuluan**: Pentingnya integrasi numerik dan keunggulan metode Gauss-Legendre.
+- **Studi Literatur**: Perbandingan integrasi analitik dan numerik, serta penjelasan transformasi integral ke bentuk standar Gauss-Legendre.
+- **Metode**: Transformasi integral, rumus umum Gauss-Legendre, dan cara menghitung galat relatif sejati.
+- **Hasil Eksperimen**: Tabel dan grafik hasil aproksimasi integral untuk n = 2 hingga 6, serta analisis konvergensi galat.
+- **Kesimpulan**: Efisiensi dan akurasi metode Gauss-Legendre dalam mengaproksimasi integral.
+- **Referensi** dan **tautan ke GitHub/Youtube**.
 
-## Cara Kerja Singkat
+---
 
-1. **Input Parameter:**  
-   - Gravitasi ($g$)
-   - Panjang saluran ($L$)
-   - Waktu ($t$)
-   - Interval awal $[x_l, x_u]$
-   - Target kecepatan $v_{target}$
+## Penjelasan Program (`main.c`)
 
-2. **Proses Bisection:**  
-   Fungsi yang dicari akarnya:  
-   f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L} t\right) - v_{target}
+Program C pada repositori ini:
+- Menghitung integral $\int_{-3}^{3} \frac{1}{1+x^2} dx$ dengan mengubahnya ke bentuk $\int_{-1}^{1} \frac{3}{1+9t^2} dt$.
+- Menghitung titik dan bobot Gauss-Legendre secara dinamis untuk n = 2 hingga 6.
+- Menampilkan hasil aproksimasi integral dan galat relatif sejati dalam format tabel.
+- Kode mudah dimodifikasi untuk jumlah titik lain atau fungsi lain.
 
-3. **Output:**  
-   - Tabel iterasi bisection method
-   - Nilai kecepetan aliran air dengan nilai H dari bisection method
-   - Validasi hasil dengan rumus Bernoulli
-
-## Contoh Output
-![picture 0](https://i.imgur.com/x0HLPLz.png)  
+**Contoh Output Program:**
+![picture 1](https://i.imgur.com/0qypuNt.png)  

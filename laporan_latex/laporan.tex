@@ -6,18 +6,16 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
-\usepackage{url} % Added for better URL formatting
-\usepackage{caption} % Added for subfigures if needed and figure notes
-\usepackage{algpseudocode}
+\usepackage{url}
+\usepackage{caption}
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18} % Gunakan versi terbaru yang Anda miliki
+\pgfplotsset{compat=1.18}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-%\title{\textbf{Analisis Penentuan Ketinggian Awal Air dalam Tangki Silinder Menggunakan Metode Numerik}}
-\title{\textbf{Pembuktian \textit{Bisection Method} dalam Perhitungan Ketinggian Awal Air pada Tangki (\textit{Bernoulli})}}
+\title{\textbf{Metode \textit{Gauss-Legendre} untuk Penyelesaian Integral Tentu Secara Numerik}}
 
 \author{
 \IEEEauthorblockN{Bonifasius Raditya Pandu Hendrianto}
@@ -30,280 +28,285 @@ radityahendrianto@gmail.com}
 \maketitle
 
 \begin{abstract}
-Penentuan parameter aliran fluida merupakan aspek krusial dalam berbagai aplikasi rekayasa. Studi ini berfokus pada penentuan ketinggian awal air ($H$) dalam sebuah tangki silinder yang mengalir melalui pipa panjang. Kecepatan air keluar ($v$) dari sistem ini dapat dihitung menggunakan persamaan yang melibatkan $H$, panjang pipa ($L$), waktu ($t$), dan percepatan gravitasi ($g$). Penelitian ini bertujuan untuk menerapkan dan membandingkan tiga metode numerik pencarian akar — metode grafis, \textit{bisecton method} (bisection), dan metode posisi palsu (false position) — untuk menentukan nilai $H$ yang memenuhi kondisi aliran tertentu. Hasil dari setiap metode akan dianalisis untuk mengevaluasi akurasi dan efisiensinya dalam menyelesaikan permasalahan ini, dengan kriteria penghentian $\epsilon_s = 1\%$.
+Integrasi numerik merupakan alat esensial dalam sains dan rekayasa untuk menyelesaikan integral yang sulit atau tidak mungkin diselesaikan secara analitik. Studi ini berfokus pada penyelesaian integral tentu $\int_{-3}^{3} \frac{1}{1+x^2} dx$ dengan menggunakan salah satu metode kuadratur yang paling efisien, yaitu formula Gauss-Legendre. Penelitian ini bertujuan untuk menerapkan formula Gauss-Legendre dengan dua hingga enam titik untuk mengaproksimasi nilai integral tersebut. Hasil dari setiap formula akan dibandingkan dengan solusi analitik eksak untuk menganalisis akurasi dan tingkat konvergensi metode. Analisis ini akan menunjukkan bagaimana penambahan jumlah titik dalam formula secara signifikan meningkatkan ketepatan hasil aproksimasi.
 \end{abstract}
 
 \begin{IEEEkeywords}
 KEYWORD: \\
-ketinggian awal, aliran pipa, metode grafis, \textit{bisecton method}, metode posisi palsu, numerik, pencarian akar
+integrasi numerik, formula Gauss-Legendre, kuadratur Gauss, galat relatif, aproksimasi integral
 \end{IEEEkeywords}
 
 \section{PENDAHULUAN}
 
-Dalam disiplin ilmu mekanika fluida, analisis aliran dari tangki penyimpanan melalui pipa merupakan salah satu problem fundamental dengan aplikasi yang luas, mulai dari sistem irigasi hingga proses industri. Salah satu parameter penting dalam analisis tersebut adalah ketinggian awal ($H_0$) fluida dalam tangki, karena parameter ini mempengaruhi kecepatan aliran keluar. Persamaan yang menggambarkan fenomena ini seringkali bersifat non-linear dan transenden, sehingga penyelesaian analitik untuk mencari parameter tertentu seperti ketinggian awal menjadi tidak praktis atau bahkan tidak mungkin dilakukan.
+Dalam kalkulus, integral tentu merupakan konsep fundamental untuk menghitung luas di bawah kurva. Meskipun banyak fungsi dapat diintegrasikan secara analitik menggunakan teorema dasar kalkulus, terdapat banyak kasus di mana fungsi (integrand) terlalu kompleks atau hanya diketahui pada titik-titik diskrit, sehingga solusi analitik tidak dapat diperoleh. Untuk mengatasi masalah ini, metode numerik menawarkan pendekatan alternatif untuk mengaproksimasi nilai integral.
 
-Tujuan utama dari penelitian ini adalah untuk mendemonstrasikan penerapan \textit{bisecton method} secara sistematis dalam menemukan solusi numerik untuk permasalahan aliran fluida yang diberikan. Untuk memfokuskan analisis, studi ini menggunakan serangkaian parameter yang telah ditetapkan: kecepatan target air adalah $v = 4 \, \text{m/s}$, panjang pipa $L = 5 \, \text{m}$, dan waktu $t = 3 \, \text{s}$. Implementasi \textit{bisecton method} akan dilakukan dengan menggunakan interval awal tebakan $[0, 2]$ meter dan kriteria penghentian berupa galat relatif perkiraan ($\epsilon_a$) yang lebih kecil dari $1\%$.
+Salah satu metode integrasi numerik yang paling kuat adalah Kuadratur Gauss, khususnya formula Gauss-Legendre. Metode ini lebih unggul dibandingkan metode lain seperti Aturan Trapesium atau Simpson karena mampu mencapai akurasi yang lebih tinggi dengan jumlah evaluasi fungsi yang lebih sedikit. Keunggulannya terletak pada pemilihan titik-titik evaluasi (abses) dan bobotnya secara optimal.
+
+Tujuan utama dari penelitian ini adalah untuk mendemonstrasikan aplikasi formula Gauss-Legendre dua-titik hingga enam-titik untuk menyelesaikan integral tentu $\int_{-3}^{3} \frac{1}{1+x^2} dx$. Hasil dari setiap aproksimasi akan dihitung dan dibandingkan dengan nilai eksak dari integral tersebut untuk menghitung galat relatif sejati ($\epsilon_t$). Analisis ini akan mengilustrasikan efisiensi dan konvergensi dari metode Gauss-Legendre seiring dengan bertambahnya jumlah titik yang digunakan.
 
 \section{STUDI LITERATUR}
-Dinamika fluida adalah cabang dari mekanika fluida yang mempelajari bagaimana fluida (cairan dan gas) bergerak serta gaya yang bekerja padanya. Studi ini sangat penting dalam berbagai aplikasi rekayasa, mulai dari desain pesawat hingga sistem perpipaan. Prinsip fundamental yang mendasari dinamika fluida adalah hukum kekekalan massa, momentum, dan energi. Dari prinsip-prinsip ini, diturunkan persamaan-persamaan yang menggambarkan hubungan antara properti fluida seperti tekanan, kecepatan, dan ketinggian. Salah satu persamaan paling terkenal dalam dinamika fluida adalah Persamaan Bernoulli, yang menghubungkan energi kinetik, energi potensial, dan energi aliran fluida di sepanjang garis aliran. Persamaan ini menjadi dasar untuk memahami fenomena seperti gaya angkat pada sayap pesawat dan aliran air dalam pipa.
 
-Salah satu aplikasi langsung dari Prinsip Bernoulli adalah Hukum Torricelli. Hukum ini, yang dirumuskan oleh Evangelista Torricelli, secara spesifik menjelaskan kecepatan aliran keluar (efluks) suatu fluida dari sebuah lubang kecil pada sebuah wadah atau tangki. Dalam kondisi ideal, di mana lubang dianggap kecil dibandingkan luas penampang tangki dan viskositas diabaikan, hukum ini menyatakan bahwa kecepatan aliran keluar, $v$, sama dengan kecepatan yang akan diperoleh sebuah benda jika jatuh bebas dari ketinggian $h$, yaitu ketinggian permukaan fluida di atas lubang. Secara matematis, hukum ini dinyatakan sebagai $v = \sqrt{2gh}$, dengan $g$ adalah percepatan gravitasi. Hukum ini memberikan fondasi teoretis yang kuat untuk menganalisis sistem aliran sederhana, seperti yang digambarkan pada studi kasus ini.
+Perhitungan integral merupakan salah satu pilar utama dalam kalkulus dan rekayasa, digunakan untuk menentukan kuantitas total dari suatu laju perubahan, seperti luas, volume, atau perpindahan. Secara umum, terdapat dua pendekatan fundamental untuk menyelesaikan integral tentu: pendekatan analitik dan pendekatan numerik.
 
-Namun, Hukum Torricelli merupakan model ideal. Dalam sistem nyata yang melibatkan pipa panjang, faktor-faktor seperti gesekan (friksi) dan efek transien (perubahan seiring waktu) saat fluida mulai bergerak menjadi signifikan. 
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{src/5.15.png}
-  \caption{Diagram skematik sistem tangki silinder dan pipa pembuangan.}
-  \label{fig:sistem_tangki}
-\end{figure}
-
+\subsection{Integrasi Analitik: Pencarian Solusi Eksak}
+Integrasi analitik, atau yang sering disebut integrasi simbolik, adalah metode yang didasarkan pada Teorema Dasar Kalkulus. Pendekatan ini bertujuan untuk menemukan fungsi antiturunan (antiderivative) dari fungsi yang diberikan (integrand). Jika $F(x)$ adalah antiturunan dari $f(x)$, maka integral tentu dari $f(x)$ dari $a$ ke $b$ dapat dihitung secara eksak sebagai:
 \begin{equation}
-v = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right)
-\label{eq:kecepatan_air}
+    \int_{a}^{b} f(x) \,dx = F(b) - F(a)
 \end{equation}
-Untuk mencari nilai ketinggian awal air ($H$) yang diperlukan untuk mencapai kecepatan aliran tertentu ($v$), kita perlu menyelesaikan persamaan berikut:
-\begin{equation}
-    f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - v
-    \label{eq:bernoulli_inverse}
-\end{equation}
-dimana:
-\begin{itemize}
-    \item $H$ adalah ketinggian air (m) 
-    \item $g$ adalah percepatan gravitasi ($9.81 \text{ m/s}^2$) 
-    \item $v$ adalah kecepatan aliran air (m/s) 
-    \item $L$ adalah panjang pipa (m) 
-    \item $t$ adalah waktu yang telah berlalu (s) 
-\end{itemize}
-Fungsi tangen hiperbolik ($\tanh$) dalam persamaan ini merepresentasikan bagaimana kecepatan aliran air ($v$) mempengaruhi ketinggian air ($H$) secara bertahap. Metode numerik diperlukan untuk menyelesaikan persamaan ini karena sifat non-linear dari fungsi $\tanh$ yang membuat solusi analitik sulit dicapai. Oleh karena itu, metode pencarian akar seperti \textit{bisection method} akan digunakan untuk menemukan nilai $H$ yang memenuhi persamaan tersebut. \\
+Hasil dari metode ini adalah solusi yang pasti benar (eksak) dan bebas dari galat aproksimasi. Namun, kelemahan utamanya adalah banyak fungsi, terutama yang muncul dalam permasalahan rekayasa kompleks, tidak memiliki antiturunan dalam bentuk fungsi elementer. Contoh klasik adalah fungsi Gaussian, $\int e^{-x^2} dx$, yang tidak dapat diselesaikan secara analitik. Keterbatasan inilah yang mendorong pengembangan metode numerik.
 
-\textit{Bisection method} merupakan metode numerik yang digunakan untuk menemukan akar dari suatu fungsi dengan cara membagi interval yang mengandung akar menjadi dua bagian dan memilih bagian yang mengandung akar. Metode ini sangat efektif untuk fungsi kontinu dan dapat menjamin konvergensi ke akar yang diinginkan jika interval awal dipilih dengan benar. Metode ini dimulai dengan memilih dua tebakan awal, $x_l$ (batas bawah) dan $x_u$ (batas atas), yang harus mengurung akar. Kemudian, titik tengah dari interval tersebut dihitung sebagai estimasi awal akar. Proses ini diulang dengan memperbarui interval berdasarkan tanda dari fungsi pada titik tengah hingga galat relatif perkiraan ($\epsilon_a$) mencapai kriteria penghentian yang ditentukan.
+\subsection{Integrasi Numerik: Pendekatan Aproksimasi}
+Ketika solusi analitik tidak dapat ditemukan, integrasi numerik menawarkan alternatif yang kuat untuk mendapatkan solusi aproksimasi (pendekatan). Ide dasarnya adalah mengganti fungsi integrand $f(x)$ yang rumit dengan polinomial aproksimasi $P(x)$ yang lebih sederhana dan mudah diintegrasikan.
+\begin{equation}
+    I = \int_{a}^{b} f(x) \,dx \approx \int_{a}^{b} P(x) \,dx
+\end{equation}
+Metode-metode yang berbeda muncul dari cara pemilihan polinomial aproksimasi ini. Salah satu keluarga metode yang populer adalah formula Newton-Cotes, yang menggunakan titik-titik evaluasi dengan jarak yang sama (equispaced points), seperti Aturan Trapesium dan Aturan Simpson.
+
+\subsection{Gauss-Legendre: Metode Kuadratur Optimal}
+Formula Gauss-Legendre dirancang untuk mengevaluasi integral pada interval standar $[-1, 1]$. Bentuk umum dari formula n-titik adalah sebagai berikut:
+\begin{equation}
+    I \approx \sum_{i=1}^{n} w_i g(t_i)
+    \label{eq:gauss_legendre}
+\end{equation}
+di mana $t_i$ adalah titik-titik (abses) yang merupakan akar dari Polinomial Legendre orde-n, dan $w_i$ adalah bobot-bobot yang sesuai. Pasangan $w_i$ dan $t_i$ telah ditabelkan secara luas dan dapat digunakan untuk berbagai tingkat akurasi.
+
+Karena formula ini didefinisikan pada interval $[-1, 1]$, integral dengan batas sembarang $[a, b]$ harus diubah terlebih dahulu melalui transformasi linear. Misalkan kita ingin mengevaluasi $I = \int_{a}^{b} f(x) dx$. Kita dapat menggunakan transformasi:
+\begin{equation}
+    x = \frac{b+a}{2} + \frac{b-a}{2}t \quad \implies \quad dx = \frac{b-a}{2}dt
+\end{equation}
+Dengan substitusi ini, integralnya menjadi:
+\begin{equation}
+    I = \int_{-1}^{1} f\left(\frac{b+a}{2} + \frac{b-a}{2}t\right) \frac{b-a}{2} dt
+\end{equation}
+Nilai batas sembarang dari $[a, b]$ akan dimasukan ke dalam fungsi $g(t)$ yang akan diintegrasikan menggunakan formula Gauss-Legendre dengan nilai a = -3 dan b = 3.
+
 
 \section{DATA PENGUJIAN}
-Terdapat beberapa variabel yang digunakan dalam perhitungan numerik \textit{bisection method ini}. Parameter waktu (t), panjang saluran (L), dan percepatan gravitasi akan berperan sebagai variabel kontrol karena nilainya sudah ditetapkan diawal. Parameter yang dijaga konstan selama simulasi adalah:
+Parameter dan fungsi yang digunakan dalam studi kasus ini adalah sebagai berikut:
 \begin{itemize}
-    \item Kecepatan Aliran Air ($v$) sebesar $4.00 \, \text{m/s}$.
-    \item Percepatan gravitasi ($g$) sebesar $9.81 \, \text{m/s}^2$.
-    \item Panjang saluran ($L$) sepanjang $5.00 \, \text{m}$.
-    \item Waktu yang telah berlalu ($t$) selama $3.00 \, \text{s}$.
+    \item Fungsi yang diintegrasikan: $f(x) = \frac{1}{1+x^2}$
+    \item Batas bawah integrasi ($a$): -3
+    \item Batas atas integrasi ($b$): 3
+    \item Metode numerik: Formula Gauss-Legendre 2, 3, 4, 5, dan 6-titik.
 \end{itemize}
-Hasil dari perhitungan numerik ini adalah perbandingan perhitungan numerik \textit{bisection method} dengan rumus prinsip bernoulli untuk mencari nilai H (m) sebagai variabel terikat. Rumus yang digunakan mengandung unsur prinsip bernoulli. 
+Untuk mengevaluasi akurasi, pertama-tama kita harus menentukan nilai eksak (sejati) dari integral tersebut. Solusi analitiknya adalah:
+\begin{equation}
+    \int_{-3}^{3} \frac{1}{1+x^2} dx = [\arctan(x)]_{-3}^{3}
+\end{equation}
+\begin{equation}
+    = \arctan(3) - \arctan(-3) = 2 \arctan(3)
+\end{equation}
+Nilai target adalah $\approx \textbf{2.498}$. Nilai ini akan digunakan sebagai patokan untuk menghitung galat relatif sejati.
+
 
 \section{METODE PENYELESAIAN}
+Penyelesaian numerik dilakukan dengan menerapkan formula Gauss-Legendre n-titik (untuk n = 2, 3, 4, 5, 6) pada integral yang telah ditransformasi, yaitu $I = \int_{-1}^{1} g(t) dt$ dengan $g(t) = \frac{3}{1+9t^2}$.
+Formula umum yang digunakan adalah:
+\begin{itemize}
+    \item Bagian pertama (pergeseran/offset):
+    \begin{equation}
+        \frac{b+a}{2} = \frac{3+(-3)}{2} = \frac{0}{2} = 0
+    \end{equation}
 
-Metode yang dipakai untuk menyelesaikan permasalahan ini adalah \textbf{\textit{bisecton method} (bisection method)}. Metode ini merupakan metode pencarian akar yang didasarkan pada teorema nilai antara. Prosesnya dimulai dengan menentukan dua tebakan awal, $x_l$ (batas bawah) dan $x_u$ (batas atas), yang harus mengurung akar, yang berarti perkalian nilai fungsi pada kedua titik tersebut harus negatif ($f(x_l)f(x_u) < 0$). Estimasi akar berikutnya, $x_r$, dihitung sebagai titik tengah interval:
+    \item Bagian kedua (penskalaan/scaling):
+    \begin{equation}
+        \frac{b-a}{2} = \frac{3-(-3)}{2} = \frac{6}{2} = 3
+    \end{equation}
+\end{itemize}
+
+\noindent
+Sekarang kita ganti bagian-bagian tersebut ke dalam persamaan integral:
 \begin{equation}
-    x_r = \frac{x_l + x_u}{2}
+I = \int_{-1}^{1} f(0 + 3t) \cdot 3 \, dt
 \end{equation}
-Interval kemudian diperbarui untuk iterasi selanjutnya. Galat relatif perkiraan ($\epsilon_a$) dihitung untuk mengukur perubahan antara estimasi akar yang baru dan yang sebelumnya, menggunakan rumus:
+Ini dapat disederhanakan menjadi:
 \begin{equation}
-    \epsilon_a = \left|\frac{x_{r}^{\text{baru}} - x_{r}^{\text{lama}}}{x_{r}^{\text{baru}}}\right| \times 100\%
-\end{equation} 
-Iterasi akan berhenti ketika nilai $\epsilon_a$ lebih kecil atau sama dengan kriteria penghentian yang ditentukan ($\epsilon_s$).
-
-Nilai dari $x_l$ dan $x_u$ awal ditentukan dari tebakan awal yang masuk akal. Nilai setelahny a akan dihitung berdasarkan fungsi $f(H)$ yang telah didefinisikan sebelumnya. Jika $f(x_l)$ dan $f(x_r)$ memiliki tanda yang berbeda atau negatif, maka akar terletak di antara $x_l$ dan $x_r$, sehingga kita akan memperbarui batas atas ($x_u$) menjadi $x_r$. Sebaliknya, jika tanda dari $f(x_l)$ dan $f(x_r)$ sama atau positif, maka akar terletak di antara $x_r$ dan $x_u$, sehingga kita akan memperbarui batas bawah ($x_l$) menjadi $x_r$. Proses ini diulang hingga galat relatif perkiraan mencapai kriteria penghentian yang telah ditentukan. Pada kasus ini, $\epsilon_s = 1\%$. 
-
-Berikut merupakan pseudocode untuk pengimplementasian \textit{bisection method}:
-\begin{flushleft}
-\begin{algorithmic}[1]
-    \State Definisikan fungsi $f(H) \gets \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - v$.
-    \State Inisialisasi parameter yang diperlukan: batas awal $x_l$ dan $x_u$, serta kriteria berhenti $\epsilon_s$.
-    \State Inisialisasi variabel penyimpan: $H_0^{\text{lama}} \gets 0$.
-    \While{true}
-        \State Hitung estimasi akar baru: $H_0 \gets \frac{x_l + x_u}{2}$.
-        \State Hitung galat relatif perkiraan: $\epsilon_a \gets \left| (H_0 - H_0^{\text{lama}}) / H_0 \right| \times 100\%$.
-        \If{$\epsilon_a \le \epsilon_s$}
-            \State \textbf{break}
-        \EndIf
-        \If{$f(x_l) \cdot f(H_0) < 0$}
-            \State Perbarui batas atas: $x_u \gets H_0$.
-        \Else
-            \State Perbarui batas bawah: $x_l \gets H_0$.
-        \EndIf
-        \State Simpan estimasi saat ini untuk iterasi berikutnya: $H_0^{\text{lama}} \gets H_0$.
-    \EndWhile
-    \State \Return $H_0$
-\end{algorithmic}
-\end{flushleft}
-
-Setelah itu, dilakukan perhitungan untuk mencari nilai galat relatif $v_\text{numerik}$ perhitungan bernoulli menggunakan hasil dari \textit{bisection method} dari $v_\text{target}$ kita dapat menggunakan rumus:
-\begin{equation}
-\epsilon_r = \left| \frac{v_{\text{target}} - v_{\text{numerik}}}{v_{\text{target}}} \right| \times 100\%
+I = \int_{-1}^{1} f(3t) \cdot 3 \, dt
 \end{equation}
+Fungsi yang akan diintegrasikan menjadi:
+\begin{equation}
+    I_n = \int_{-1}^{1} \frac{3}{1+(3t)^2} dt
+\end{equation}
+Formula Gauss-Legendre n-titik untuk integral ini adalah:
+\begin{equation}
+    I_n = \sum_{i=1}^{n} w_i \frac{3}{1+9t_i^2}
+\end{equation}
+di mana $I_n$ adalah aproksimasi nilai integral menggunakan formula n-titik. Bobot ($w_i$) dan abses ($t_i$) untuk setiap formula diambil dari tabel standar Gauss-Legendre.
+
+Setelah mendapatkan nilai aproksimasi ($I_n$), galat relatif sejati ($\epsilon_t$) dihitung untuk mengukur akurasi hasil. Rumus galat yang digunakan adalah:
+\begin{equation}
+    \epsilon_t = \left| \frac{\text{Nilai Sejati} - \text{Nilai Aproksimasi}}{\text{Nilai Sejati}} \right| \times 100\%
+\end{equation}
+Proses ini diulang untuk setiap formula dari dua hingga enam titik untuk mengamati bagaimana galat berkurang seiring dengan meningkatnya jumlah titik.
 
 
 \section{DISKUSI DAN ANALISA HASIL EKSPERIMEN}
-Hasil perhitungan numerik \textit{bisection method} akan dibandingkan dengan perhitungan nilai fungsi f(H) sehingga perbandingan tersebut akan menjadi tolak ukur dari keakuratan \textit{bisection method}. Dengan menggunakan \textit{bisection method}, kita akan mencari nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ dengan parameter sebagai berikut:
+Perhitungan dilakukan secara sistematis untuk setiap formula n-titik. Nilai sejati integral adalah $I_{sejati} \approx 2.49809154$.
+
+\subsection{Formula Dua-Titik (n=2)}
 \begin{itemize}
-    \item Fungsi target: $f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - 4 = 0$
-    \item Interval awal: $[x_l, x_u] = [0, 2]$
-    \item Kriteria berhenti: $\epsilon_s = 1\%$
+    \item Abses: $t_{1,2} = \pm 0.577350$
+    \item Bobot: $w_{1,2} = 1.000000$
 \end{itemize}
+\begin{align*}
+    I_2 &= w_1 g(t_1) + w_2 g(t_2) = \mathbf{1.500000} \\
+    \epsilon_t &= \left| \frac{2.498092 - 1.500000}{2.498092} \right| \times 100\% = \mathbf{39.954\%}
+\end{align*}
+
+\subsection{Formula Tiga-Titik (n=3)}
+\begin{itemize}
+    \item Abses: $t_1 = -0.774597, t_2 = 0, t_3 = 0.774597$
+    \item Bobot: $w_1, w_3 = 0.555556, w_2 = 0.888889$
+\end{itemize}
+\begin{align*}
+    I_3 &= \sum_{i=1}^{3} w_i g(t_i) = \mathbf{3.187500} \\
+    \epsilon_t &= \left| \frac{2.498092 - 3.187500}{2.498092} \right| \times 100\% = \mathbf{27.597\%}
+\end{align*}
+
+\subsection{Formula Empat-Titik (n=4)}
+\begin{itemize}
+    \item Abses: $t_{1,2} = \pm 0.861136, t_{3,4} = \pm 0.339981$
+    \item Bobot: $w_{1,2} = 0.347855, w_{3,4} = 0.652145$
+\end{itemize}
+\begin{align*}
+    I_4 &= \sum_{i=1}^{4} w_i g(t_i) = \mathbf{2.189781} \\
+    \epsilon_t &= \left| \frac{2.498092 - 2.189781}{2.498092} \right| \times 100\% = \mathbf{12.342\%}
+\end{align*}
+
+\subsection{Formula Lima-Titik (n=5)}
+\begin{itemize}
+    \item Abses: $t_1=0, t_{2,3}=\pm0.538469, t_{4,5}=\pm0.906180$
+    \item Bobot: $w_1=0.568889, w_{2,3}=0.478629, w_{4,5}=0.236927$
+\end{itemize}
+\begin{align*}
+    I_5 &= \sum_{i=1}^{5} w_i g(t_i) = \mathbf{2.671698} \\
+    \epsilon_t &= \left| \frac{2.498092 - 2.671698}{2.498092} \right| \times 100\% = \mathbf{6.950\%}
+\end{align*}
+
+\subsection{Formula Enam-Titik (n=6)}
+\begin{itemize}
+    \item Abses: $t_{1,2}=\pm0.238619, t_{3,4}=\pm0.661209, t_{5,6}=\pm0.932470$
+    \item Bobot: $w_{1,2}=0.467914, w_{3,4}=0.360762, w_{5,6}=0.171324$
+\end{itemize}
+\begin{align*}
+    I_6 &= \sum_{i=1}^{6} w_i g(t_i) = \mathbf{2.411356} \\
+    \epsilon_t &= \left| \frac{2.498092 - 2.411356}{2.498092} \right| \times 100\% = \mathbf{3.472\%}
+\end{align*}
+
 \begin{table}[htbp]
 \centering
-\caption{Hasil Iterasi \textit{bisection method} untuk Mencari H}
-\label{tab:hasil_bisection}
+\caption{Aproksimasi Integral dan Galat Relatif}
+\label{tab:hasil_aproksimasi_ringkas}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|c|c|c|c|r|c|}
+\begin{tabular}{|c|r|r|}
 \hline
-\textbf{Iterasi} & $\boldsymbol{x_l}$ & $\boldsymbol{x_u}$ & $\boldsymbol{x_r}$ & \multicolumn{1}{c|}{$\boldsymbol{f(x_r)}$} & $\boldsymbol{\epsilon_a (\%)}$ \\
+\textbf{n} & \textbf{Aproksimasi ($I_n$)} & \textbf{Galat ($\epsilon_t$ \%)} \\
 \hline
-1 & 0.000000 & 2.000000 & 1.000000 & -0.15097 & - \\
-2 & 1.000000 & 2.000000 & 1.500000 & 1.01452 & 33.33 \\
-3 & 1.000000 & 1.500000 & 1.250000 & 0.46467 & 20.00 \\
-4 & 1.000000 & 1.250000 & 1.125000 & 0.16543 & 11.11 \\
-5 & 1.000000 & 1.125000 & 1.062500 & 0.00934 & 5.88  \\
-6 & 1.000000 & 1.062500 & 1.031250 & -0.07026 & 3.03  \\
-7 & 1.031250 & 1.062500 & 1.046875 & -0.03032 & 1.49  \\
-8 & 1.046875 & 1.062500 & \textbf{1.054688} & -0.01046 & \textbf{0.74} \\
+2 & 1.500000 & 39.954162 \\
+3 & 3.187500 & 27.597406 \\
+4 & 2.189781 & 12.341842 \\
+5 & 2.671698 & 6.949568  \\
+6 & 2.411356 & 3.472054  \\
 \hline
 \end{tabular}
 \end{table}
-Nilai pada tabel ini didapat dari perhitungan iteratif menggunakan \textit{bisection method} dengan memasukan nilai kecepatan aliran yang diinginkan ($v = 4 \, \text{m/s}$) untuk mendapatkan nilai $H_0$ yang sesuai.
-
-Berikut merupakan perhitungan setiap iterasi yang ada menggunakan \textit{bisection method} untuk mencari nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ dengan parameter awal sebagai berikut:
-\begin{itemize}
-    \item Fungsi target: $f(H) = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right) - 4 = 0$
-    \item Interval awal: $[x_l, x_u] = [0, 2]$
-    \item Kriteria berhenti: $\epsilon_s = 1\%$
-\end{itemize}
-Iterasi ke-1 adalah nilai tengah dari interval 0 dan 2, yakni 1.0 sebagai nilai bagi dua.
-
-Perhitungan untuk Iterasi ke-2:
-\begin{enumerate}
-    \item Identifikasi nilai $x_r$ yang relevan:
-    \begin{itemize}
-        \item $x_{r, \text{baru}}$ (dari iterasi ke-2) = \textbf{1.5}
-        \item $x_{r, \text{lama}}$ (dari iterasi ke-1) = \textbf{1.0}
-    \end{itemize}
-    
-    \item Masukkan ke dalam rumus:
-    \begin{equation}
-    \epsilon_a = \left| \frac{1.5 - 1.0}{1.5} \right| \times 100\%
-    \end{equation}
-    
-    \item Selesaikan kalkulasi:
-    \begin{equation}
-    \epsilon_a = \left| \frac{0.5}{1.5} \right| \times 100\% = 0.3333 \times 100\% = \textbf{33.33\%}
-    \end{equation}
-\end{enumerate}
-
-Perhitungan untuk Iterasi ke-3:
-\begin{enumerate}
-    \item Identifikasi nilai $x_r$ yang relevan:
-    \begin{itemize}
-        \item $x_{r, \text{baru}}$ (dari iterasi ke-3) = \textbf{1.25}
-        \item $x_{r, \text{lama}}$ (dari iterasi ke-2) = \textbf{1.50}
-    \end{itemize}
-    
-    \item Masukkan ke dalam rumus:
-    \begin{equation}
-    \epsilon_a = \left| \frac{1.25 - 1.5}{1.250000} \right| \times 100\%
-    \end{equation}
-    
-    \item Selesaikan kalkulasi:
-    \begin{equation}
-    \epsilon_a = \left| \frac{-0.25}{1.25} \right| \times 100\% = 0.2 \times 100\% = \textbf{20.00\%}
-    \end{equation}
-\end{enumerate}
-
-Perhitungan selesai sampai nilai galat relatif mencapai nilai yang lebih kecil dari kriteria penghentian yang ditentukan (pada kasus ini, nilai $\epsilon_s = 1\%$). Pada kasus ini, iterasi terakhir adalah 8.
-
-Perhitungan untuk Iterasi ke-8:
-\begin{enumerate}
-    \item Identifikasi nilai $x_r$ yang relevan:
-    \begin{itemize}
-        \item $x_{r, \text{baru}}$ (dari iterasi ke-8) = \textbf{1.054688}
-        \item $x_{r, \text{lama}}$ (dari iterasi ke-7) = \textbf{1.046875}
-    \end{itemize}
-    
-    \item Masukkan ke dalam rumus:
-    \begin{equation}
-    \epsilon_a = \left| \frac{1.054688 - 1.046875}{1.054688} \right| \times 100\%
-    \end{equation}
-    
-    \item Selesaikan kalkulasi:
-    \begin{equation}
-    \epsilon_a = \left| \frac{0.007813}{1.054688} \right| \times 100\% = 0.00741 \times 100\% = \textbf{0.74\%}
-    \end{equation}
-\end{enumerate}
-Perhitungan dihentikan pada \textbf{iterasi ke-8} karena nilai galat relatif perkiraan ($\epsilon_a = 0.74\%$) telah lebih kecil dari kriteria penghentian yang ditentukan, yakni $1\%$. Dengan demikian, nilai ketinggian awal ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ adalah sekitar \textbf{1.054688 meter}. \\
 
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
     \begin{axis}[
-        title={\textbf{Grafik Pencarian Akar $f(H)=0$}},
-        xlabel={Ketinggian Awal, $H$ (m)},
-        ylabel={Nilai Fungsi, $f(H)$},
-        xmin=0, xmax=2,          % Batas sumbu x sesuai interval bisection
-        ymin=-4.5, ymax=2.5,      % Batas sumbu y
-        grid=major,              % Menambahkan grid
-        legend pos=south east,   % Posisi legenda
-        axis lines=middle,       % Sumbu x dan y bertemu di (0,0)
-        ]
+        title={\textbf{Nilai Aproksimasi Integral ($I_n$)}},
+        xlabel={Jumlah Titik (n)},
+        ylabel={Nilai Integral},
+        xmin=1.5, xmax=6.5,
+        ymin=1.3, ymax=3.4,
+        xtick={2,3,4,5,6},
+        grid=major,
+        legend pos=south east,
+        width=\columnwidth, % <-- ini yang penting
+        height=5cm,
+    ]
         
-        % 1. Plot fungsi f(H)
-        % f(H) = sqrt(19.62*H) * tanh(3 * sqrt(19.62*H) / 10) - 4
-        \addplot[
-            domain=0.01:2,   % Domain H dari 0.01 (hindari H=0) hingga 2
-            samples=100,     % Jumlah titik sampel untuk kehalusan kurva
-            color=blue,
-            thick
-        ] {sqrt(19.62*x) * tanh(3 * sqrt(19.62*x) / 10) - 4};
-        \addlegendentry{$f(H) = \sqrt{2gH}\tanh(\frac{\sqrt{2gH}}{2L}t) - 4$}
-
-        % 2. Tandai titik akar yang ditemukan oleh metode bisection
-        % Nilai H = 1.054688 dari tabel iterasi Anda
-        \addplot[
-            mark=*,
-            color=red,
-            mark size=2.5pt
-        ] coordinates {(1.054688, 0)};
-        \addlegendentry{Akar ditemukan ($H \approx 1.055$)}
+    % Plot 1: Data aproksimasi I_n
+    \addplot[
+        color=blue,
+        mark=*,          % Beri tanda (*) pada setiap titik data
+        thick,           % Tebalkan garis plot
+    ] coordinates {
+        (2, 1.50000)
+        (3, 3.18750)
+        (4, 2.18978)
+        (5, 2.67170)
+        (6, 2.41136)
+    };
+    \addlegendentry{Aproksimasi \(I_n\)} % Label untuk plot pertama
+    
+    % Plot 2: Garis horizontal untuk Nilai Sejati
+    \addplot[
+        color=red,
+        dashed,          % Gaya garis putus-putus
+        thick,
+        domain=1.5:6.5,  % Rentang gambar garis dari xmin hingga xmax
+    ] {2.4980915}; % Nilai y konstan (nilai sejati)
+    \addlegendentry{Nilai Sejati} % Label untuk plot kedua
         
-        % 3. Tambahkan anotasi/label untuk titik akar
-        \node[pin={[pin edge={red, thick}]135:{\small$H \approx 1.054688$}}] at (axis cs:1.054688, 0) {};
-
     \end{axis}
 \end{tikzpicture}
-\caption{Visualisasi pencarian akar dari fungsi $f(H)$ pada interval $[0, 2]$}
-\label{fig:grafik_bisection}
+\caption{Grafik perbandingan nilai aproksimasi integral ($I_n$) terhadap nilai target untuk jumlah titik (n) yang berbeda.}
+\label{fig:grafik_aproksimasi_integral}
 \end{figure}
 
-Perhitungan dengan rumus bernoulli dilakukan untuk memvalidasi hasil perhitungan numerik \textit{bisection method} dengan rumus:
-\begin{equation}
-v = \sqrt{2gH} \tanh\left(\frac{\sqrt{2gH}}{2L}t\right)
-\end{equation}
-Dengan memasukkan nilai-nilai yang telah ditetapkan:
-\begin{equation}
-v = \sqrt{2 \cdot 9.81 \cdot 1.054688} \tanh\left(\frac{\sqrt{2 \cdot 9.81 \cdot 1.054688}}{2 \cdot 5} \cdot 3\right)
-\end{equation}
-\begin{equation}
-v = \sqrt{20.68} \tanh\left(\frac{\sqrt{20.68}}{10} \cdot 3\right)
-\end{equation}
-\begin{equation}
-v \approx 3.9916 \, \text{m/s}
-\end{equation}
+Pada visualisasi grafik diatas, terlihat bahwa nilai aproksimasi integral ($I_n$) untuk setiap formula Gauss-Legendre (dari 2 hingga 6 titik) berfluktuasi, namun secara umum mendekati nilai target yang ditandai dengan garis horizontal merah. Formula 2-titik menunjukan nilai paling jauh dari nilai sejati, yaitu sekitar 1.5, sedangkan formula 6-titik memberikan hasil yang paling mendekati nilai sejati, yaitu sekitar 2.41136. Hal ini menunjukkan bahwa semakin banyak titik yang digunakan dalam formula Gauss-Legendre, semakin akurat aproksimasi integral yang dihasilkan.
 
-Untuk menghitung galat relatif antara kecepatan target dan kecepatan yang dihasilkan dari perhitungan bernoulli, kita dapat menggunakan rumus:
-\begin{equation}
-\epsilon_r = \left| \frac{4 - 3.9916}{4} \right| \times 100\%
-\end{equation}
-\begin{equation}
-\epsilon_r = \left| \frac{0.0084}{4} \right| \times 100\% \approx 0.21\%
-\end{equation}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[
+        title={\textbf{Galat Relatif ($\epsilon_t$ \%) terhadap Jumlah Titik (n)}},
+        xlabel={Jumlah Titik (n)},
+        ylabel={Galat Relatif Sejati (\% \(\epsilon_t\))},
+        xmin=1.5, xmax=6.5,  % Memberi sedikit ruang di tepi
+        ymin=0, ymax=45,     % Mulai sumbu y dari 0
+        xtick={2,3,4,5,6},   % Tentukan titik-titik pada sumbu x
+        yticklabel={\pgfmathprintnumber{\tick}\%}, % Tambahkan simbol % pada sumbu y
+        grid=major,          % Tambahkan grid utama
+        legend pos=north east, % Posisi legenda
+        width=\columnwidth, % Lebar grafik agar pas di kolom
+        height=5cm,
+    ]
+        
+    % Data plot diambil dari hasil output program C
+    \addplot[
+        color=blue,
+        mark=*,          % Beri tanda (*) pada setiap titik data
+        thick,           % Tebalkan garis plot
+    ] coordinates {
+        (2, 39.95416)
+        (3, 27.59740)
+        (4, 12.34184)
+        (5, 6.94956)
+        (6, 3.47205)
+    };
+    
+    % Menambahkan entri untuk legenda
+    \addlegendentry{Galat Relatif (\(\epsilon_t\))}
+        
+    \end{axis}
+\end{tikzpicture}
+\caption{Grafik visualisasi penurunan galat relatif sejati seiring dengan bertambahnya jumlah titik (n) pada metode Gauss-Legendre.}
+\label{fig:grafik_galat_konvergensi}
+\end{figure}
 
-Hasil perhitungan dari \textit{bisection method} menunjukkan bahwa nilai ketinggian awal air ($H$) adalah \textbf{1.054688 meter} untuk mendapat nilai kecepatan aliran air sebesar $4.00 \, \text{m/s}$ dengan galat relatif sebesar \textbf{0.74\%} untuk nilai ketinggiannya. Dengan ketinggian yang sama, hasil perhitungan bernoulli menunjukkan bahwa kecepatan aliran air yang dihasilkan adalah sekitar $3.9916 \, \text{m/s}$ galat relatif antara kecepatan target ($4 \, \text{m/s}$) dan kecepatan yang dihasilkan ($3.9916 \, \text{m/s}$) adalah sekitar $0.21\%$. \\
+Dari hasil yang divisualisasikan pada grafik diatas, terlihat jelas bahwa akurasi metode Gauss-Legendre meningkat secara dramatis dengan penambahan jumlah titik. Formula 2-titik memberikan hasil yang cukup tinggi sebesar 39.954\%. Namun, saat formula 6-titik digunakan, galatnya turun drastis hingga sebesar 3.472\%.
 
 \section{KESIMPULAN}
-Dengan menggunakan \textit{bisection method}, hasil dari ketinggian awal air ($H$) yang diperlukan untuk mencapai kecepatan aliran $4 \, \text{m/s}$ adalah sekitar 1.054688 meter dengan galat relatif sebesar $0.74\%$. Perbandingan dengan hasil perhitungan bernoulli menunjukkan bahwa kecepatan aliran yang dihasilkan adalah sekitar $3.9916 \, \text{m/s}$ dengan galat relatif antar kecepatan perhitungan bernoulli dengan kecepatan target sebesar $0.21\%$ yang menunjukan persenan error sangat kecil hingga dibawah 1\%. Hal ini menunjukkan bahwa \textit{bisection method} adalah metode yang efektif untuk mencari akar dari fungsi non-linear dalam konteks aliran fluida. \\
+Perhitungan membuktikan bawa formula Gauss-Legendre sangat efisien dalam mengaproksimasi integral dari fungsi kontinu seperti $\int_{-3}^{3} \frac{1}{1+x^2} dx$. Dengan hanya 6 kali evaluasi fungsi, metode ini menghasilkan aproksimasi yang sangat dekat dengan nilai target. Galat relatif sejati menurun dari 39.95\% untuk formula 2-titik menjadi hanya 3.472\% untuk formula 6-titik. Metode ini secara optimal memilih titik evaluasi untuk menangkap "perilaku" fungsi di seluruh interval sehingga menghasilkan konvergensi yang cepat menuju solusi yang benar.
 
 \section{LINK GITHUB}
 https://github.com/BonifasiusRaditya/FinproKomputasiNumerik.git
 
 \section{LINK YOUTUBE}
-\url{https://youtu.be/AHNSWor2pdk} \\
+\url{https://youtu.be/ITIelyhhZOo} \\
 
 \begin{thebibliography}{00}
 \bibitem{ref1} F. M. White, \textit{Fluid Mechanics}, 8th ed. New York: McGraw-Hill Education, 2016.
