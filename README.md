@@ -8,7 +8,7 @@ Repositori ini berisi:
 
 ---
 
-## Isi Laporan
+## Laporan
 
 Laporan membahas:
 - **Pendahuluan**: Pentingnya integrasi numerik dan keunggulan metode Gauss-Legendre.
