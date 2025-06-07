@@ -20,7 +20,7 @@ Laporan membahas:
 
 ---
 
-## Penjelasan Program (`main.c`)
+## Program main.c
 
 Program C pada repositori ini:
 - Menghitung integral $\int_{-3}^{3} \frac{1}{1+x^2} dx$ dengan mengubahnya ke bentuk $\int_{-1}^{1} \frac{3}{1+9t^2} dt$.
